@@ -34,6 +34,25 @@ async function run(promise, okMsg) {
 }
 
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+
+// Las listas se refrescan solas cada pocos segundos. Para no "comerse" un clic,
+// solo se reemplaza el HTML si cambió, y nunca mientras hay un dedo/mouse apretado.
+let pointerDown = false;
+const pending = new Map();
+function setHTML(el, html) {
+  if (pointerDown) { pending.set(el, html); return; }
+  if (el.__html === html) return;
+  el.__html = html;
+  el.innerHTML = html;
+}
+document.addEventListener('pointerdown', () => { pointerDown = true; }, true);
+const release = () => {
+  pointerDown = false;
+  // dejamos que el click se dispare antes de aplicar lo pendiente
+  setTimeout(() => { for (const [el, html] of pending) setHTML(el, html); pending.clear(); }, 0);
+};
+document.addEventListener('pointerup', release, true);
+document.addEventListener('pointercancel', release, true);
 const activeId = () => state?.active_question_id ?? null;
 const activeQ = () => questions.find((q) => q.id === activeId()) ?? null;
 
@@ -153,13 +172,14 @@ function renderLive() {
   $('toggle-open').textContent = q.is_open ? 'Cerrar respuestas' : 'Abrir respuestas';
 }
 
-function renderQuestions() {
+function renderQuestions({ force = false } = {}) {
   $('q-count').textContent = questions.length ? plural(questions.length, 'pregunta', 'preguntas') : '';
+  if (editing && !force) return; // no pisar lo que se está escribiendo
   if (!questions.length) {
-    $('qlist').innerHTML = '<li class="a-empty">Todavía no hay preguntas. Agregá la primera arriba.</li>';
+    setHTML($('qlist'), '<li class="a-empty">Todavía no hay preguntas. Agregá la primera arriba.</li>');
     return;
   }
-  $('qlist').innerHTML = questions.map((q, i) => {
+  setHTML($('qlist'), questions.map((q, i) => {
     const active = q.id === activeId();
     const s = stats[q.id] ?? { answers: 0, people: 0 };
     if (editing === q.id) {
@@ -182,7 +202,7 @@ function renderQuestions() {
         <button class="btn sm danger" data-act="delete" data-id="${q.id}" type="button">Borrar</button>
       </div>
     </li>`;
-  }).join('');
+  }).join(''));
 }
 
 function renderTerms() {
@@ -199,10 +219,10 @@ function renderTerms() {
     (!qs || t.text.toLowerCase().includes(qs) || t.norm.includes(qs)));
 
   if (!list.length) {
-    $('terms').innerHTML = `<div class="a-empty">${terms.length ? 'Nada para mostrar con este filtro.' : 'Todavía no hay respuestas.'}</div>`;
+    setHTML($('terms'), `<div class="a-empty">${terms.length ? 'Nada para mostrar con este filtro.' : 'Todavía no hay respuestas.'}</div>`);
     return;
   }
-  $('terms').innerHTML = list.map((t) => {
+  setHTML($('terms'), list.map((t) => {
     const n = esc(t.norm);
     const actions = [];
     if (t.flagged > 0) actions.push(`<button class="btn sm" data-term="allow" data-norm="${n}" type="button">Permitir</button>`);
@@ -216,13 +236,13 @@ function renderTerms() {
       <span class="a-term-count">${t.count}</span>
       ${actions.join('')}
     </div>`;
-  }).join('');
+  }).join(''));
 }
 
 function renderBlocked() {
   $('block-n').textContent = blocked.length;
-  $('blocked').innerHTML = blocked.map((w) =>
-    `<span class="a-chip">${esc(w)}<button data-unblock="${esc(w)}" type="button" title="Quitar">×</button></span>`).join('');
+  setHTML($('blocked'), blocked.map((w) =>
+    `<span class="a-chip">${esc(w)}<button data-unblock="${esc(w)}" type="button" title="Quitar">×</button></span>`).join(''));
 }
 
 // ---------- Acciones: pantalla ----------
@@ -326,7 +346,7 @@ $('qlist').addEventListener('click', async (e) => {
     case 'project': return project(id);
     case 'up': return move(id, -1);
     case 'down': return move(id, 1);
-    case 'edit': editing = id; renderQuestions(); $('qlist').querySelector('textarea')?.focus(); return;
+    case 'edit': editing = id; renderQuestions({ force: true }); $('qlist').querySelector('textarea')?.focus(); return;
     case 'cancel': editing = null; return renderQuestions();
     case 'save': {
       const text = $('qlist').querySelector(`[data-edit="${id}"]`).value.replace(/\s+/g, ' ').trim();
