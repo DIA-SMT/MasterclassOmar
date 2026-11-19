@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Panel · Nube de palabras</title>
+  </head>
+  <body class="a-body">
+    <div class="glow-bg"></div>
+
+    <!-- ============ Login ============ -->
+    <div id="login" class="a-center" hidden>
+      <form id="login-form" class="card glow a-login" autocomplete="on">
+        <img class="a-login-logo" src="/logos/isi-conecta.png" alt="ISI Conecta" />
+        <h1>Panel de la nube</h1>
+        <p class="a-muted">Ciclo de Masterclasses · Sistemas sin fronteras</p>
+        <label>Email <input class="input" id="email" type="email" autocomplete="username" required /></label>
+        <label>Contraseña <input class="input" id="password" type="password" autocomplete="current-password" required /></label>
+        <p class="a-error" id="login-error" hidden></p>
+        <button class="btn primary" id="login-btn" type="submit">Ingresar</button>
+      </form>
+    </div>
+
+    <!-- ============ Usuario sin permiso ============ -->
+    <div id="denied" class="a-center" hidden>
+      <div class="card glow a-login">
+        <h1>Sin permiso de admin</h1>
+        <p class="a-muted">El usuario <b id="denied-email"></b> inició sesión pero no está habilitado. Ejecutá esto en Supabase → SQL Editor:</p>
+        <pre class="a-pre" id="denied-sql"></pre>
+        <button class="btn" id="denied-logout" type="button">Cerrar sesión</button>
+      </div>
+    </div>
+
+    <!-- ============ Panel ============ -->
+    <div id="app" class="a-app" hidden>
+      <header class="a-top">
+        <div class="a-brand">
+          <img src="/logos/masterclass.png" alt="" />
+          <div>
+            <b>Nube de palabras</b>
+            <span>Ciclo de Masterclasses · Sistemas sin fronteras</span>
+          </div>
+        </div>
+        <nav class="a-nav">
+          <a class="btn sm primary" href="/pantalla" target="_blank" rel="noopener">Abrir pantalla ↗</a>
+          <a class="btn sm" href="/" target="_blank" rel="noopener">Vista celular ↗</a>
+          <button class="btn sm ghost" id="logout" type="button">Salir</button>
+        </nav>
+      </header>
+
+      <div class="a-grid">
+        <!-- En pantalla + moderación -->
+        <section class="card glow a-panel a-live">
+          <div class="a-panel-head">
+            <h2>En pantalla</h2>
+            <span class="a-conn" id="conn" title="Conexión">●</span>
+          </div>
+
+          <div id="live-none" class="a-live-none">
+            <p>No hay pregunta proyectada: la pantalla muestra la <b>bienvenida con el QR</b>.</p>
+            <button class="btn primary" id="project-first" type="button">Proyectar la primera pregunta</button>
+          </div>
+
+          <div id="live-q" hidden>
+            <div class="a-live-status" id="live-status"></div>
+            <p class="a-live-text" id="live-text"></p>
+            <div class="a-live-stats" id="live-stats"></div>
+          </div>
+
+          <div class="a-live-actions">
+            <button class="btn" id="toggle-open" type="button"></button>
+            <button class="btn" id="toggle-qr" type="button"></button>
+            <button class="btn" id="next" type="button">Siguiente pregunta →</button>
+            <button class="btn ghost" id="unproject" type="button">Quitar de pantalla</button>
+          </div>
+
+          <div class="a-mod" id="mod">
+            <div class="a-mod-head">
+              <h3>Moderación</h3>
+              <div class="a-tabs" id="tabs">
+                <button data-filter="all" class="on" type="button">Todas <span></span></button>
+                <button data-filter="flagged" type="button">Filtradas <span></span></button>
+                <button data-filter="hidden" type="button">Ocultas <span></span></button>
+              </div>
+            </div>
+            <input class="input a-search" id="search" placeholder="Buscar palabra…" />
+            <p class="a-muted a-hint">Tocá <b>Ocultar</b> para sacar una palabra de la nube al instante. Las <b>Filtradas</b> las frenó el filtro automático: si son válidas, <b>Permitir</b>.</p>
+            <div class="a-terms" id="terms"></div>
+            <div class="a-mod-foot">
+              <button class="btn sm danger" id="clear" type="button">Vaciar respuestas de esta pregunta</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Preguntas -->
+        <section class="card a-panel a-questions">
+          <div class="a-panel-head"><h2>Preguntas</h2><span class="a-muted" id="q-count"></span></div>
+          <form id="add-form" class="a-add">
+            <textarea class="input" id="add-text" rows="2" maxlength="200" placeholder="Escribí una pregunta nueva…" required></textarea>
+            <button class="btn primary" type="submit">Agregar</button>
+          </form>
+          <ol class="a-qlist" id="qlist"></ol>
+        </section>
+
+        <!-- Herramientas -->
+        <section class="card a-panel a-tools">
+          <div class="a-panel-head"><h2>Herramientas</h2></div>
+          <div class="a-tool">
+            <div class="a-qr-mini" id="qr-mini"></div>
+            <div>
+              <div class="a-muted">El QR lleva a</div>
+              <a class="a-link" id="public-url" target="_blank" rel="noopener"></a>
+              <div class="a-row"><button class="btn sm" id="copy-url" type="button">Copiar link</button>
+              <button class="btn sm" id="export" type="button">Exportar respuestas (CSV)</button></div>
+            </div>
+          </div>
+          <div class="a-tool-block">
+            <h3>Filtro de palabras</h3>
+            <p class="a-muted a-hint">Se aplica a respuestas nuevas. Lo que ya está en pantalla se saca con <b>Ocultar</b>.</p>
+            <form id="block-form" class="a-row">
+              <input class="input" id="block-word" placeholder="Agregar palabra o frase a bloquear" maxlength="40" />
+              <button class="btn" type="submit">Bloquear</button>
+            </form>
+            <details class="a-details">
+              <summary>Ver lista (<span id="block-n">0</span>)</summary>
+              <div class="a-chips" id="blocked"></div>
+            </details>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="toast" class="a-toast" hidden></div>
+    <script type="module" src="/src/admin.js"></script>
+  </body>
+</html>

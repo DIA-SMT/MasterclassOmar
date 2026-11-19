@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Participá · Masterclass Sistemas sin fronteras</title>
+    <meta name="description" content="Respondé las preguntas de la masterclass y mirá tus palabras en la nube." />
+  </head>
+  <body class="p-body">
+    <div class="glow-bg"></div>
+    <div id="net" class="p-net"></div>
+
+    <main class="p-wrap">
+      <header class="p-head">
+        <div class="p-logos" id="logos"></div>
+        <div class="p-brand">
+          <div class="ciclo">Ciclo de</div>
+          <div class="masterclasses">MASTERCLASSES</div>
+          <div class="topic p-topic">Sistemas sin fronteras</div>
+        </div>
+      </header>
+
+      <section class="card glow p-card" aria-live="polite">
+        <!-- Cargando -->
+        <div id="s-loading" class="p-state">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <p class="p-hint">Conectando…</p>
+        </div>
+
+        <!-- Sin pregunta activa -->
+        <div id="s-waiting" class="p-state" hidden>
+          <div class="p-badge">En espera</div>
+          <h1 class="p-title">Ya casi</h1>
+          <p class="p-hint">Cuando arranque la pregunta va a aparecer acá sola. No hace falta recargar.</p>
+          <div class="dots"><span></span><span></span><span></span></div>
+        </div>
+
+        <!-- Pregunta abierta / cerrada -->
+        <div id="s-question" hidden>
+          <div class="p-badge" id="q-badge">Pregunta</div>
+          <h1 class="p-question" id="q-text"></h1>
+
+          <form id="form" class="p-form" autocomplete="off" novalidate>
+            <label class="sr-only" for="answer">Tu respuesta</label>
+            <div class="p-field">
+              <input id="answer" class="input p-input" name="answer" maxlength="25" enterkeyhint="send"
+                     placeholder="Escribí una palabra o frase corta" autocapitalize="sentences" />
+              <span class="p-count" id="count">0/25</span>
+            </div>
+            <button class="btn primary p-send" id="send" type="submit">Enviar</button>
+            <p class="p-hint p-tip">Podés mandar todas las respuestas que quieras, de a una.</p>
+          </form>
+
+          <div id="closed" class="p-closed" hidden>
+            <strong>Respuestas cerradas.</strong> ¡Gracias por participar! Mirá la pantalla.
+          </div>
+
+          <div id="mine-wrap" class="p-mine" hidden>
+            <div class="p-mine-title">Tus respuestas <span id="mine-n"></span></div>
+            <div class="p-chips" id="mine"></div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="p-foot">
+        <img class="logo p-smt" src="/logos/ciudad-smt.png" alt="Ciudad de San Miguel de Tucumán" />
+        <div class="p-foot-txt">
+          <div>Ing. José Omar Abraham</div>
+          <div class="p-foot-role">Secretario de Innovación Tecnológica</div>
+        </div>
+      </footer>
+    </main>
+
+    <div id="toast" class="p-toast" role="status" hidden></div>
+    <script type="module" src="/src/participante.js"></script>
+  </body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Pantalla · Nube de palabras</title>
+  </head>
+  <body class="s-body" data-scene="loading">
+    <div class="glow-bg"></div>
+    <div class="s-net s-net-bl" id="net-bl"></div>
+    <div class="s-net s-net-r" id="net-r"></div>
+
+    <!-- ============ Bienvenida (sin pregunta activa) ============ -->
+    <section class="s-welcome" id="welcome">
+      <header class="s-wlogos" data-logos></header>
+      <div class="s-hero">
+        <div class="s-hero-text">
+          <div class="ciclo s-ciclo">Ciclo de</div>
+          <div class="s-mrow"><span class="masterclasses s-mc">MASTERCLASSES</span><span data-circuit></span></div>
+          <h1 class="topic s-topic">Sistemas sin fronteras</h1>
+          <p class="subtitle s-sub">Del comercio, la industria y la docencia al reto del sector público</p>
+          <div class="s-speaker">
+            <div class="s-speaker-name">Ing. José Omar Abraham</div>
+            <span class="role-pill s-role">Secretario de Innovación Tecnológica</span>
+            <div class="s-speaker-org">Municipalidad de San Miguel de Tucumán</div>
+          </div>
+        </div>
+        <div class="card glow s-qr-hero">
+          <div class="s-qr-box" data-qr></div>
+          <div class="s-qr-cta">Escaneá y participá</div>
+          <div class="s-qr-url" data-url></div>
+        </div>
+      </div>
+      <footer class="s-wfoot">
+        <div class="s-when"><span>19 de noviembre · 17:00 h</span><span class="s-sep"></span><span>Aula Magna UTN FRT</span></div>
+        <img class="logo s-smt" src="/logos/ciudad-smt.png" alt="Ciudad de San Miguel de Tucumán" />
+      </footer>
+    </section>
+
+    <!-- ============ En vivo (pregunta + nube) ============ -->
+    <section class="s-live" id="live">
+      <aside class="s-side">
+        <div class="s-slogos" data-logos></div>
+        <div class="s-sbrand">
+          <div class="ciclo">Ciclo de</div>
+          <span class="masterclasses">MASTERCLASSES</span>
+          <div class="topic s-stopic">Sistemas sin fronteras</div>
+        </div>
+        <div class="card glow s-qr-side">
+          <div class="s-qr-box" data-qr></div>
+          <div class="s-qr-cta">Escaneá y respondé</div>
+          <div class="s-qr-url" data-url></div>
+        </div>
+        <div class="s-stats">
+          <div><b id="st-people">0</b><span>participantes</span></div>
+          <div><b id="st-total">0</b><span>respuestas</span></div>
+        </div>
+      </aside>
+
+      <main class="s-main">
+        <div class="card glow s-qcard">
+          <div class="s-qbody">
+            <div class="s-qlabel"><span class="s-live-dot"></span><span id="q-label">Pregunta en vivo</span></div>
+            <h1 class="s-qtext" id="q-text"></h1>
+          </div>
+          <img class="logo s-qsmt" src="/logos/ciudad-smt.png" alt="Ciudad de San Miguel de Tucumán" />
+        </div>
+        <div class="s-cloud" id="cloud">
+          <div class="s-empty" id="empty">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <p>Esperando las primeras respuestas…</p>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <!-- ============ QR a pantalla completa ============ -->
+    <section class="s-qr-overlay" id="qr-overlay" hidden>
+      <div class="s-ov-logos" data-logos></div>
+      <h2 class="s-ov-q" id="ov-q">Escaneá y participá</h2>
+      <div class="card glow s-ov-card">
+        <div class="s-qr-box" data-qr></div>
+      </div>
+      <div class="s-ov-url"><span>Entrá a</span> <b data-url></b></div>
+    </section>
+
+    <button class="btn ghost s-fs" id="fs" type="button" title="Pantalla completa (F)">⛶ Pantalla completa</button>
+    <script type="module" src="/src/pantalla.js"></script>
+  </body>
+</html>

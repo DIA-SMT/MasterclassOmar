@@ -1,0 +1,168 @@
+@import '@fontsource-variable/montserrat';
+@import '@fontsource-variable/lexend';
+
+:root {
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: #0a0a0a;
+  --surface-2: #121212;
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.22);
+  --white: #f6f6f4;
+  --text: #e9e9e6;
+  --muted: #a4a59f;
+  --silver: #b8bbc0;
+  --lime: #cddc2b;          /* verde lima del banner */
+  --lime-bright: #dfee3c;
+  --lime-soft: #e4ec9c;
+  --lime-glow: rgba(205, 220, 43, 0.5);
+  --lime-dim: rgba(205, 220, 43, 0.14);
+  --danger: #ff6b5b;
+  --warn: #ffb547;
+  --ok: #8fe388;
+  --font-title: 'Montserrat Variable', Montserrat, system-ui, sans-serif;
+  --font-body: 'Lexend Variable', Lexend, system-ui, sans-serif;
+  --radius: 18px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+img { display: block; max-width: 100%; }
+button, input, textarea { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+
+/* ---------- Tipografía del banner ---------- */
+.ciclo { font-family: var(--font-body); font-weight: 300; color: var(--lime); line-height: 1; letter-spacing: -0.01em; }
+.masterclasses {
+  display: inline-block;
+  font-family: var(--font-title);
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  border-radius: 999px;
+  padding: 0.08em 0.32em 0.1em;
+}
+.topic { font-family: var(--font-title); font-weight: 600; color: var(--white); letter-spacing: -0.01em; line-height: 1.15; }
+.subtitle { font-weight: 300; color: var(--muted); line-height: 1.35; }
+.role-pill {
+  display: inline-block;
+  background: linear-gradient(90deg, var(--lime-bright), var(--lime));
+  color: #111;
+  font-family: var(--font-body);
+  font-weight: 500;
+  border-radius: 999px;
+  padding: 0.18em 0.75em;
+  line-height: 1.2;
+}
+
+/* ---------- Tarjeta con línea luminosa superior (como el banner) ---------- */
+.card {
+  position: relative;
+  background: linear-gradient(180deg, #0e0e0e 0%, #050505 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.card.glow::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 14%;
+  right: 14%;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, transparent, var(--lime-bright), transparent);
+  box-shadow: 0 0 18px 3px var(--lime-glow);
+}
+
+/* ---------- Red de nodos decorativa ---------- */
+.net { position: absolute; pointer-events: none; overflow: visible; }
+.net-lines line { stroke: rgba(205, 220, 43, 0.38); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.net-dots circle { fill: var(--lime); filter: drop-shadow(0 0 4px var(--lime-glow)); }
+.circuit { color: rgba(255, 255, 255, 0.85); }
+
+.glow-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60vmax 40vmax at 18% 62%, rgba(205, 220, 43, 0.10), transparent 60%),
+    radial-gradient(50vmax 30vmax at 85% 15%, rgba(205, 220, 43, 0.05), transparent 60%);
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-2);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 0.6em 1em;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.95rem;
+  line-height: 1.1;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s, opacity 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn:hover { border-color: rgba(255, 255, 255, 0.4); background: #1a1a1a; }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn:focus-visible, .input:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+.btn.primary { background: var(--lime); border-color: var(--lime); color: #0a0a0a; font-weight: 600; }
+.btn.primary:hover { background: var(--lime-bright); }
+.btn.ghost { background: transparent; }
+.btn.danger { border-color: rgba(255, 107, 91, 0.5); color: #ffb3aa; background: transparent; }
+.btn.danger:hover { background: rgba(255, 107, 91, 0.12); }
+.btn.sm { padding: 0.42em 0.7em; font-size: 0.82rem; border-radius: 10px; }
+
+.input {
+  width: 100%;
+  background: #0c0c0c;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  padding: 0.8em 0.95em;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-weight: 400;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.input::placeholder { color: #6d6e69; }
+.input:focus { border-color: var(--lime); box-shadow: 0 0 0 4px var(--lime-dim); outline: none; }
+
+.config-error {
+  position: fixed;
+  inset: auto 16px 16px 16px;
+  z-index: 99;
+  background: #2a0f0b;
+  border: 1px solid var(--danger);
+  color: #ffd2cc;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.config-error code { color: #fff; }
+
+@keyframes pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+.dots span { display: inline-block; width: 0.45em; height: 0.45em; margin: 0 0.12em; border-radius: 50%; background: var(--lime); animation: pulse 1.2s infinite; }
+.dots span:nth-child(2) { animation-delay: 0.2s; }
+.dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
